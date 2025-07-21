@@ -23,7 +23,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 1rem 0;
-    gap: 1.5rem;
+    gap: 0rem;
 }
 
 .sidebar-initial {
@@ -41,11 +41,11 @@ body {
 }
 
 .sidebar-logo {
-    width: 48px; /* Adjust size as needed */
-    height: 48px; /* Adjust size as needed */
+    width: 25px; /* Adjust size as needed */
+    height: 25px; /* Adjust size as needed */
     border-radius: 8px; /* Slightly rounded corners for the logo container */
     overflow: hidden; /* Ensures image stays within bounds */
-    margin-bottom: 1rem; /* Space below the logo */
+    margin-bottom: 0rem; /* Space below the logo */
 }
 
 .sidebar-logo img {
@@ -55,7 +55,7 @@ body {
 }
 
 .sidebar-spacer {
-    flex-grow: 1; /* This pushes the subsequent items (icons) to the bottom */
+    flex-grow: 0.1; /* This pushes the subsequent items (icons) to the bottom */
 }
 
 .sidebar-icon {
@@ -92,7 +92,7 @@ body {
     right: -3px; /* Adjust as needed */
     width: 7px;  /* Size of the dot */
     height: 7px; /* Size of the dot */
-    background-color: #2563eb; /* Blue color for the dot */
+    background-color: #0fd03f; /* Blue color for the dot */
     border-radius: 50%;
     border: 1px solid white; /* Small white border for contrast against dark background */
 }
@@ -140,7 +140,7 @@ body {
 }
 
 .radio-option.selected {
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .radio-circle {
@@ -905,7 +905,7 @@ body {
 }
 
 /* Media Queries for responsiveness */
-@media (max-width: 1024px) {
+@media (max-width: 654px) {
     .app {
         flex-direction: column;
     }
@@ -915,7 +915,34 @@ body {
         flex-direction: row;
         height: auto;
         padding: 0.5rem 1rem;
-        justify-content: center;
+        justify-content: space-around; /* Better distribution of space */
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: nowrap; /* Prevent wrapping to single line */
+        overflow-x: auto; /* Allow horizontal scrolling if needed */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
+    .sidebar-initial {
+        display: none; /* Hide initial in mobile view */
+    }
+    
+    .sidebar-logo {
+        display: block;
+        width: 32px; /* Smaller size for mobile */
+        height: 32px;
+        margin: 0;
+        order: 1; /* Position at the start */
+    }
+
+    .sidebar-spacer {
+        display: none; /* Remove spacer in mobile view */
+    }
+
+    .sidebar-icon {
+        margin: 0.25rem;
+        padding: 0.5rem;
+        flex-shrink: 0;
     }
 
     .workflow-builder,
@@ -925,7 +952,7 @@ body {
     }
 
     .workflow-actions {
-        justify-content: space-between; /* Back and Next buttons spread out */
+        justify-content: space-between;
     }
 }
 
