@@ -6,14 +6,15 @@ import {
   MessageCircle,
   Send,
   Bookmark,
+  MessageSquareText,
   MoreHorizontal,
   Search,
   Home,
+  User,
   PlusSquare,
-  Users,
   Settings,
-  Play,
   Plus,
+  Play,
   Info
 } from 'lucide-react';
 
@@ -138,17 +139,37 @@ const useWorkflow = () => {
 
 // Sidebar component
 const Sidebar = () => {
-  const icons = [Home, Search, PlusSquare, Users, Settings];
-  return (
-    <div className="sidebar">
-      {icons.map((Icon, i) => (
-        <div className={`sidebar-icon ${i === 2 ? 'active' : ''}`} key={i}>
-          <Icon size={20} />
+    const icons = [Home, Search, PlusSquare, User, MessageSquareText, Send, Settings]; // Keep your existing icons
+  
+    return (
+      <div className="sidebar">
+        {/* "M" initial or user avatar placeholder */}
+        <div className="sidebar-initial">M</div> {/* Or an image: <img src="/path/to/user-avatar.png" alt="User" /> */}
+  
+        {/* Company Logo */}
+        <div className="sidebar-logo">
+          <img src="/image/logo.jpeg" alt="Company Logo" /> {/* Use your actual logo path */}
         </div>
-      ))}
-    </div>
-  );
-};
+  
+        {/* Spacer to push icons down, if needed, or adjust gap on sidebar */}
+        <div className="sidebar-spacer"></div> 
+  
+        {icons.map((Icon, i) => (
+          <div className={`sidebar-icon ${i === 2 ? 'active' : ''}`} key={i}>
+            {Icon === MessageSquareText ? (
+              <div className="sidebar-message-icon-wrapper">
+                <Icon size={20} />
+                <div className="sidebar-notification-dot"></div>
+              </div>
+            ) : (
+              <Icon size={20} />
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+  
 
 // Modal for selecting a post
 const PostSelectionModal = () => {
