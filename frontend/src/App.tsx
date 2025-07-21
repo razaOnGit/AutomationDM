@@ -265,122 +265,118 @@ const WorkflowBuilder = () => {
     }
   };
 
-  // Render the current step content
-  const renderStepContent = () => {
-    switch (state.currentStep) {
-      case 'postSelection':
-        return (
-          <>
-            <h2 className="workflow-title">When someone comments on</h2>
-            <div className="radio-option selected">
-              <input type="radio" checked readOnly />
-              <span>a specific post or reel</span>
-            </div>
-
-            <div className="post-card-row">
-              {mockPosts.map((post) => (
-                <div
-                  key={post.id}
-                  className={`post-card ${state.selectedPost.id === post.id ? 'selected' : ''}`}
-                  onClick={() => dispatch({ type: 'SET_SELECTED_POST', payload: post })}
-                >
-                  <img className="post-card-image" src={post.imageUrl} alt={post.caption} />
-                </div>
-              ))}
-              <button className="show-all-btn" onClick={() => dispatch({ type: 'SET_SHOW_POST_MODAL', payload: true })}>
-                Show All
-              </button>
-            </div>
-
-            <div className="radio-option">
-              <input type="radio" disabled />
-              <span>any post or reel</span>
-              <span className="pro-label">PRO</span>
-            </div>
-
-            <div className="radio-option">
-              <input type="radio" disabled />
-              <span>next post or reel</span>
-              <span className="pro-label">PRO</span>
-            </div>
-          </>
-        );
-      
-      case 'commentKeyword':
-        return (
-          <>
-            <h2 className="workflow-title">And this comment has</h2>
-            <div className="keyword-section">
-              <div className="radio-option selected">
-                <input type="radio" checked readOnly />
-                <span>a specific word or words</span>
-              </div>
-
-              <input
-                className="keyword-input"
-                type="text"
-                value={state.commentKeyword}
-                onChange={(e) => dispatch({ type: 'SET_COMMENT_KEYWORD', payload: e.target.value })}
-                placeholder="Enter a word or multiple"
-              />
-
-              <p className="hint-text">Use commas to separate words</p>
-              <div className="chips">
-                <span>Price</span>
-                <span>Link</span>
-                <span>Shop</span>
-              </div>
-
-              <div className="radio-option">
-                <input type="radio" disabled />
-                <span>any word</span>
-              </div>
-            </div>
-          </>
-        );
-      
-      case 'dmConfiguration':
-        return <DMConfiguration />;
-      
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="workflow-builder">
-      {/* Workflow step buttons */}
-      <div className="workflow-steps">
-        <WorkflowStepButtons />
-      </div>
+     
 
-      {/* Current step content */}
-      <div className="step-content">
-        {renderStepContent()}
-        
-        {/* Navigation buttons */}
-        <div className="workflow-actions">
-          {state.currentStep !== 'postSelection' && (
-            <button className="back-btn" onClick={handleBackStep}>
-              Back
+      {/* Step 1: Post Selection */}
+      {state.currentStep === 'postSelection' && (
+        <>
+          <h2 className="workflow-title">When someone comments on</h2>
+
+          <div className="radio-option selected">
+            <input type="radio" checked readOnly />
+            <span>a specific post or reel</span>
+          </div>
+
+          <div className="post-card-row">
+            {mockPosts.map((post) => (
+              <div
+                key={post.id}
+                className={`post-card ${state.selectedPost.id === post.id ? 'selected' : ''}`}
+                onClick={() => dispatch({ type: 'SET_SELECTED_POST', payload: post })}
+              >
+                <img className="post-card-image" src={post.imageUrl} alt={post.caption} />
+              </div>
+            ))}
+            <button className="show-all-btn" onClick={() => dispatch({ type: 'SET_SHOW_POST_MODAL', payload: true })}>
+              Show All
             </button>
-          )}
-          
-          {state.currentStep !== 'dmConfiguration' && (
+          </div>
+
+          <div className="radio-option">
+            <input type="radio" disabled />
+            <span>any post or reel</span>
+            <span className="pro-label">PRO</span>
+          </div>
+
+          <div className="radio-option">
+            <input type="radio" disabled />
+            <span>next post or reel</span>
+            <span className="pro-label">PRO</span>
+          </div>
+
+          <div className="workflow-actions">
             <button
               className="next-btn"
               onClick={handleNextStep}
-              disabled={
-                (state.currentStep === 'postSelection' && !state.selectedPost) ||
-                (state.currentStep === 'commentKeyword' && !state.commentKeyword.trim())
-              }
+              disabled={!state.selectedPost} // Disable if no post is selected
             >
               Next
             </button>
-          )}
-        </div>
-      </div>
-      
+          </div>
+        </>
+      )}
+
+      {/* Step 2: Comment Keywords */}
+      {state.currentStep === 'commentKeyword' && (
+        <>
+          <h2 className="workflow-title">And this comment has</h2>
+
+          <div className="keyword-section">
+            <div className="radio-option selected">
+              <input type="radio" checked readOnly />
+              <span>a specific word or words</span>
+            </div>
+
+            <input
+              className="keyword-input"
+              type="text"
+              value={state.commentKeyword}
+              onChange={(e) => dispatch({ type: 'SET_COMMENT_KEYWORD', payload: e.target.value })}
+              placeholder="Enter a word or multiple"
+            />
+
+            <p className="hint-text">Use commas to separate words</p>
+            <div className="chips">
+              <span>Price</span>
+              <span>Link</span>
+              <span>Shop</span>
+            </div>
+
+            <div className="radio-option">
+              <input type="radio" disabled />
+              <span>any word</span>
+            </div>
+          </div>
+
+          <div className="workflow-actions">
+            <button className="back-btn" onClick={handleBackStep}>
+              Back
+            </button>
+            <button
+              className="next-btn"
+              onClick={handleNextStep}
+              disabled={!state.commentKeyword.trim()} // Disable if keyword is empty
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* Step 3: DM Configuration */}
+      {state.currentStep === 'dmConfiguration' && (
+        <>
+          <DMConfiguration />
+          <div className="workflow-actions">
+            <button className="back-btn" onClick={handleBackStep}>
+              Back
+            </button>
+          </div>
+        </>
+      )}
+
       <PostSelectionModal /> {/* Modal for selecting posts */}
     </div>
   );
