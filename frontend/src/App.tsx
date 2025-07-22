@@ -15,8 +15,31 @@ import {
   Settings,
   Plus,
   Play,
-  Info
+  Info,
+  ChevronLeft,
+  Phone,
+  Video,
+  Camera,
+  Smile
 } from 'lucide-react';
+
+// Define Comment interface
+interface Comment {
+  id: number;
+  username: string;
+  text: string;
+  avatar?: string;
+  isKeyword?: boolean;
+}
+
+// Mock comments data with avatars
+const mockComments: Comment[] = [
+  { id: 1, username: 'sarah_designs', text: 'This is amazing! 😍', avatar: '/image/avatar1.jpg' },
+  { id: 2, username: 'mike_photo', text: 'Great work!', avatar: '/image/avatar2.jpg' },
+  { id: 3, username: 'jenny_art', text: 'Love this content', avatar: '/image/avatar3.jpg' },
+  { id: 4, username: 'alex_creative', text: 'So inspiring! 🔥', avatar: '/image/avatar4.jpg' },
+  { id: 5, username: 'lisa_studio', text: 'Can you share the link?', avatar: '/image/avatar5.jpg', isKeyword: true },
+];
 
 // Mock data for posts
 const mockPosts = [
@@ -65,6 +88,13 @@ interface WorkflowState {
   dmMessage: string;
   dmLink: string;
   openingDmEnabled: boolean;
+  linkUrl: string;
+  showLinkModal: boolean;
+  messagePreview: string;
+  simulatedComments: Comment[];
+  showTriggerComment: boolean;
+  isLive: boolean;
+  workflowId: string | null;
 }
 
 // Define the shape of the workflow actions
@@ -76,7 +106,14 @@ type WorkflowAction =
   | { type: 'SET_SHOW_POST_MODAL'; payload: boolean }
   | { type: 'SET_DM_MESSAGE'; payload: string }
   | { type: 'SET_DM_LINK'; payload: string }
-  | { type: 'SET_OPENING_DM_ENABLED'; payload: boolean };
+  | { type: 'SET_OPENING_DM_ENABLED'; payload: boolean }
+  | { type: 'SET_LINK_URL'; payload: string }
+  | { type: 'SET_SHOW_LINK_MODAL'; payload: boolean }
+  | { type: 'SET_MESSAGE_PREVIEW'; payload: string }
+  | { type: 'SET_SIMULATED_COMMENTS'; payload: Comment[] }
+  | { type: 'SET_SHOW_TRIGGER_COMMENT'; payload: boolean }
+  | { type: 'SET_IS_LIVE'; payload: boolean }
+  | { type: 'SET_WORKFLOW_ID'; payload: string | null };
 
 // Create the context
 const WorkflowContext = createContext<{
@@ -103,6 +140,20 @@ const workflowReducer = (state: WorkflowState, action: WorkflowAction): Workflow
       return { ...state, dmLink: action.payload };
     case 'SET_OPENING_DM_ENABLED':
       return { ...state, openingDmEnabled: action.payload };
+    case 'SET_LINK_URL':
+      return { ...state, linkUrl: action.payload };
+    case 'SET_SHOW_LINK_MODAL':
+      return { ...state, showLinkModal: action.payload };
+    case 'SET_MESSAGE_PREVIEW':
+      return { ...state, messagePreview: action.payload };
+    case 'SET_SIMULATED_COMMENTS':
+      return { ...state, simulatedComments: action.payload };
+    case 'SET_SHOW_TRIGGER_COMMENT':
+      return { ...state, showTriggerComment: action.payload };
+    case 'SET_IS_LIVE':
+      return { ...state, isLive: action.payload };
+    case 'SET_WORKFLOW_ID':
+      return { ...state, workflowId: action.payload };
     default:
       return state;
   }
@@ -119,6 +170,13 @@ const WorkflowProvider = ({ children }: { children: React.ReactNode }) => {
     dmMessage: 'Hey there! I\'m so happy you\'re here, thanks so much for your interest 😊\n\nClick below and I\'ll send you the link in just a sec ✨',
     dmLink: '',
     openingDmEnabled: true, // Opening DM is enabled by default
+    linkUrl: '',
+    showLinkModal: false,
+    messagePreview: '',
+    simulatedComments: [],
+    showTriggerComment: false,
+    isLive: false,
+    workflowId: null,
   });
 
   return (
@@ -139,37 +197,37 @@ const useWorkflow = () => {
 
 // Sidebar component
 const Sidebar = () => {
-    const icons = [Home, Search, PlusSquare, User, MessageSquareText, Send, Settings]; // Keep your existing icons
-  
-    return (
-      <div className="sidebar">
-        {/* "M" initial or user avatar placeholder */}
-        <div className="sidebar-initial">M</div> {/* Or an image: <img src="/path/to/user-avatar.png" alt="User" /> */}
-  
-        {/* Company Logo */}
-        <div className="sidebar-logo">
-          <img src="/image/logo.jpeg" alt="Company Logo" /> {/* Use your actual logo path */}
-        </div>
-  
-        {/* Spacer to push icons down, if needed, or adjust gap on sidebar */}
-        <div className="sidebar-spacer"></div> 
-  
-        {icons.map((Icon, i) => (
-          <div className={`sidebar-icon ${i === 2 ? 'active' : ''}`} key={i}>
-            {Icon === MessageSquareText ? (
-              <div className="sidebar-message-icon-wrapper">
-                <Icon size={20} />
-                <div className="sidebar-notification-dot"></div>
-              </div>
-            ) : (
-              <Icon size={20} />
-            )}
-          </div>
-        ))}
+  const icons = [Home, Search, PlusSquare, User, MessageSquareText, Send, Settings]; // Keep your existing icons
+
+  return (
+    <div className="sidebar">
+      {/* "M" initial or user avatar placeholder */}
+      <div className="sidebar-initial">M</div> {/* Or an image: <img src="/path/to/user-avatar.png" alt="User" /> */}
+
+      {/* Company Logo */}
+      <div className="sidebar-logo">
+        <img src="/image/logo.jpeg" alt="Company Logo" /> {/* Use your actual logo path */}
       </div>
-    );
-  };
-  
+
+      {/* Spacer to push icons down, if needed, or adjust gap on sidebar */}
+      <div className="sidebar-spacer"></div>
+
+      {icons.map((Icon, i) => (
+        <div className={`sidebar-icon ${i === 2 ? 'active' : ''}`} key={i}>
+          {Icon === MessageSquareText ? (
+            <div className="sidebar-message-icon-wrapper">
+              <Icon size={20} />
+              <div className="sidebar-notification-dot"></div>
+            </div>
+          ) : (
+            <Icon size={20} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 
 // Modal for selecting a post
 const PostSelectionModal = () => {
@@ -250,7 +308,10 @@ const DMConfiguration = () => {
           disabled
         />
         <p className="helper-text">Create the DM you'd like to send</p>
-        <button className="add-link-btn">
+        <button
+          className="add-link-btn"
+          onClick={() => dispatch({ type: 'SET_SHOW_LINK_MODAL', payload: true })}
+        >
           <Plus size={16} />
           Add A Link
         </button>
@@ -288,7 +349,7 @@ const WorkflowBuilder = () => {
 
   return (
     <div className="workflow-builder">
-     
+
 
       {/* Step 1: Post Selection */}
       {state.currentStep === 'postSelection' && (
@@ -359,10 +420,23 @@ const WorkflowBuilder = () => {
             />
 
             <p className="hint-text">Use commas to separate words</p>
-            <div className="chips">
-              <span>Price</span>
-              <span>Link</span>
-              <span>Shop</span>
+            <p className="example-text">For example:</p>
+            <div className="suggestion-chips">
+              {['Price', 'Link', 'Shop', 'Discount', 'Buy', 'Sale'].map((word) => (
+                <button
+                  key={word}
+                  className="suggestion-chip"
+                  onClick={() => {
+                    const currentKeywords = state.commentKeyword.trim();
+                    const newKeyword = currentKeywords 
+                      ? `${currentKeywords}, ${word}` 
+                      : word;
+                    dispatch({ type: 'SET_COMMENT_KEYWORD', payload: newKeyword });
+                  }}
+                >
+                  {word}
+                </button>
+              ))}
             </div>
 
             <div className="radio-option">
@@ -435,100 +509,325 @@ const WorkflowStepButtons = () => {
   );
 };
 
-// Instagram post content for the phone mockup
-const InstagramPostContent = () => {
+// DM Preview component for the phone mockup
+const DMPreview = () => {
   const { state } = useWorkflow();
-  const post = state.selectedPost;
-  const comments = [...post.comments];
-
-  // Add a mock comment with the keyword if in the 'Comments' step and keyword is set
-  if (state.activeWorkflowStep === 'Comments' && state.commentKeyword.trim()) {
-    comments.push({ id: 999, username: 'user_trigger', text: state.commentKeyword });
-  }
 
   return (
-    <div className="instagram-post">
-      <div className="post-header">
-        <div className="user-info">
-          <div className="avatar">
-            <img
-              src="/image/logo.jpeg" // Original logo path
-              alt="User avatar"
-              className="avatar-inner"
-            />
+    <div className="dm-interface">
+      {/* DM Header */}
+      <div className="dm-header">
+        <div className="dm-user-info">
+          <ChevronLeft size={20} />
+          <div className="dm-avatar">
+            <img src="/image/logo.jpeg" alt="User" />
           </div>
-          <span className="username">{post.username}</span>
+          <span className="dm-username">botspacehq</span>
         </div>
-        <MoreHorizontal size={20} className="more-icon" />
+        <div className="dm-actions">
+          <Phone size={20} />
+          <Video size={20} />
+        </div>
       </div>
-      <div className="post-image">
-        <img className="main-image" src={post.imageUrl} alt={post.caption} />
-        {/* Check if the URL indicates a video (simple check) */}
-        {post.imageUrl.includes('video') && <Play className="play-icon-overlay" size={48} />}
+
+      {/* Message History */}
+      <div className="messages-container">
+        <div className="message-bubble received">
+          <p>{state.dmMessage}</p>
+        </div>
+
+        <div className="message-bubble received">
+          <p>Click below and I'll send you the link in just a sec ✨</p>
+        </div>
+
+        <div className="link-button-message">
+          <button className="send-link-btn">Send me the link</button>
+        </div>
       </div>
-      <div className="post-content">
-        <div className="post-actions">
-          <div className="left-actions">
-            <Heart className="action-icon" />
-            <MessageCircle className="action-icon" />
-            <Send className="action-icon" />
-          </div>
-          <Bookmark className="action-icon" />
+
+      {/* Message Input */}
+      <div className="message-input-container">
+        <div className="message-input-wrapper">
+          <Camera size={20} />
+          <input
+            type="text"
+            placeholder="Message..."
+            className="message-input"
+          />
+          <Smile size={20} />
         </div>
-        <p className="likes-count">{post.likes} likes</p>
-        <div className="caption">
-          <span className="caption-username">{post.username}</span>
-          <span className="caption-text">{post.caption}</span>
-        </div>
-        <div className="comments">
-          {comments.map((c: any) => (
-            <div className="comment" key={c.id}>
-              <span className={`comment-username ${c.isKeyword ? 'keyword' : ''}`}>{c.username}</span>
-              <span className={`comment-text ${c.isKeyword ? 'keyword' : ''}`}>
-                {c.text}
-                {c.isKeyword && <span className="trigger-badge">TRIGGER</span>}
-              </span>
-            </div>
-          ))}
-        </div>
-        {/* DM Preview conditional rendering */}
-        {state.activeWorkflowStep === 'DM' && state.openingDmEnabled && (
-          <div className="dm-preview">
-            <p className="dm-label">DM WILL BE SENT:</p>
-            <p className="dm-text">
-              "{state.dmMessage}"
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
 };
 
-// Phone mockup for Instagram preview
-const PhoneMockup = () => (
-  <div className="phone-mockup">
-    <div className="phone-frame">
-      <div className="phone-inner">
-        <div className="phone-content">
-          <div className="status-bar">
-            <div className="status-indicators">
-              <div className="indicator" />
-              <div className="signal-bar" />
-              <div className="dot" />
+// Link Modal component
+const LinkModal = () => {
+  const { state, dispatch } = useWorkflow();
+  const [linkUrl, setLinkUrl] = React.useState('');
+
+  if (!state.showLinkModal) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h3>Add a Link</h3>
+        <input
+          type="url"
+          placeholder="Paste your link here"
+          value={linkUrl}
+          onChange={(e) => setLinkUrl(e.target.value)}
+          className="link-input"
+        />
+        <div className="modal-actions">
+          <button onClick={() => dispatch({ type: 'SET_SHOW_LINK_MODAL', payload: false })}>
+            Cancel
+          </button>
+          <button onClick={() => {
+            dispatch({ type: 'SET_LINK_URL', payload: linkUrl });
+            dispatch({ type: 'SET_SHOW_LINK_MODAL', payload: false });
+          }}>
+            Add Link
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Instagram Comments View that matches the image UI exactly
+const InstagramCommentsView = () => {
+  const { state } = useWorkflow();
+  const [newComment, setNewComment] = React.useState('');
+
+  // Only show comments view if there's input in the keyword field
+  if (!state.commentKeyword.trim()) {
+    return <InstagramPostContent />;
+  }
+
+  // Get the first keyword to display as comment
+  const getDisplayComment = () => {
+    const keywords = state.commentKeyword.toLowerCase().split(',').map(word => word.trim());
+    const firstKeyword = keywords[0];
+    return firstKeyword.charAt(0).toUpperCase() + firstKeyword.slice(1);
+  };
+
+  const handleAddComment = () => {
+    if (newComment.trim()) {
+      console.log('Adding comment:', newComment);
+      setNewComment('');
+    }
+  };
+
+  return (
+    <div className="instagram-comments-dialog">
+      {/* Header with back arrow and title */}
+      <div className="comments-dialog-header">
+        <ChevronLeft size={20} className="back-arrow" />
+        <div className="header-center">
+          <span className="header-username">BOTSPACEHQ</span>
+          <span className="header-subtitle">Posts</span>
+        </div>
+        <div className="header-spacer"></div>
+      </div>
+
+      {/* User profile row */}
+      <div className="profile-row">
+        <div className="profile-avatar-small">
+          <img src="/image/logo.jpeg" alt="Profile" />
+        </div>
+        <span className="profile-name">botspacehq</span>
+        <MoreHorizontal size={16} className="profile-more" />
+      </div>
+
+      {/* Half post preview - exactly like in your image */}
+      <div className="half-post-preview">
+        <img src={state.selectedPost.imageUrl} alt="Post preview" className="half-post-image" />
+        <div className="post-text-overlay">
+          <span className="overlay-text">3 Billion Users!</span>
+        </div>
+        <div className="post-bottom-bar">
+          <span className="white-bar"></span>
+        </div>
+      </div>
+
+      {/* Comments section header */}
+      <div className="comments-header-bar">
+        <span className="comments-title">Comments</span>
+        <Send size={16} className="send-icon" />
+      </div>
+
+      {/* Single comment matching the keyword */}
+      <div className="comments-list">
+        <div className="single-comment">
+          <div className="comment-avatar-circle">
+            <img src="/image/logo.jpeg" alt="User avatar" />
+          </div>
+          <div className="comment-content">
+            <div className="comment-top-row">
+              <span className="comment-username">Username</span>
+              <span className="comment-time">Now</span>
+              <Heart size={12} className="comment-heart-icon" />
             </div>
+            <div className="comment-text">
+              {getDisplayComment()}
+            </div>
+            <button className="reply-btn">Reply</button>
           </div>
-          <div className="instagram-header">
-            <h3 className="app-title">BOTSPACEHQ</h3>
+        </div>
+      </div>
+
+      {/* Spacer for empty area */}
+      <div className="comments-spacer"></div>
+
+      {/* Emoji reactions bar */}
+      <div className="emoji-reactions-bar">
+        {['❤️', '🙌', '👍', '👏', '😢', '😍', '😮', '😂'].map((emoji, index) => (
+          <span key={index} className="emoji-reaction">
+            {emoji}
+          </span>
+        ))}
+      </div>
+
+      {/* Comment input at bottom */}
+      <div className="comment-input-bottom">
+        <div className="input-wrapper">
+          <div className="input-avatar-circle">
+            <Camera size={16} />
           </div>
-          <div className="content-area">
-            <InstagramPostContent />
+          <input 
+            type="text" 
+            placeholder="Add a comment for username..."
+            className="comment-input-text"
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Enhanced Instagram post content with realistic comments view
+const InstagramPostContent = ({ showComments = false }: { showComments?: boolean }) => {
+  const { state } = useWorkflow();
+
+  return (
+    <div className="instagram-post">
+      {/* Enhanced header with better styling */}
+      <div className="post-header">
+        <div className="user-info">
+          <div className="profile-avatar">
+            <img src="/image/logo.jpeg" alt="Profile" />
+          </div>
+          <span className="username">botspacehq</span>
+          <button className="follow-btn">Follow</button>
+        </div>
+        <MoreHorizontal size={16} />
+      </div>
+
+      {/* Main post image */}
+      <div className="post-image-container">
+        <img src={state.selectedPost.imageUrl} alt="Post" />
+      </div>
+
+      {/* Enhanced comments section */}
+      <div className="comments-section">
+        <div className="post-actions">
+          <Heart size={20} />
+          <MessageCircle size={20} />
+          <Send size={20} />
+          <Bookmark size={20} className="bookmark-right" />
+        </div>
+
+        <div className="likes-section">
+          <span>{state.selectedPost.likes} likes</span>
+        </div>
+
+        <div className="caption-section">
+          <span className="username-bold">botspacehq</span>
+          <span className="caption-text">{state.selectedPost.caption}</span>
+        </div>
+
+        {/* Real comments with avatars */}
+        <div className="comments-list">
+          {mockComments.map(comment => (
+            <div className="comment-row" key={comment.id}>
+              <div className="comment-avatar">
+                <img src={comment.avatar || '/default-avatar.png'} alt={comment.username} />
+              </div>
+              <div className="comment-content">
+                <span className="comment-username">{comment.username}</span>
+                <span className="comment-time">Now</span>
+                <div className="comment-text">
+                  {comment.text}
+                  {comment.isKeyword && <span className="trigger-badge">TRIGGER</span>}
+                </div>
+                <button className="reply-btn">Reply</button>
+              </div>
+              <Heart size={12} className="comment-like" />
+            </div>
+          ))}
+        </div>
+
+        {/* Add comment input */}
+        <div className="add-comment-section">
+          <input
+            type="text"
+            placeholder="Add a comment for username..."
+            className="comment-input"
+          />
+          <div className="emoji-reactions">
+            ❤️ 🙌 🔥 👏 😢 😍 😮 😂
           </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
+
+// Enhanced PhoneMockup with dynamic content switching
+const PhoneMockup = () => {
+  const { state } = useWorkflow();
+
+  const renderContent = () => {
+    switch (state.activeWorkflowStep) {
+      case 'Post':
+        return <InstagramPostContent />;
+      case 'Comments':
+        return <InstagramCommentsView />;
+      case 'DM':
+        return <DMPreview />;
+      default:
+        return <InstagramPostContent />;
+    }
+  };
+
+  return (
+    <div className="phone-mockup">
+      <div className="phone-frame">
+        <div className="phone-inner">
+          <div className="phone-content">
+            <div className="status-bar">
+              <div className="status-indicators">
+                <div className="indicator" />
+                <div className="signal-bar" />
+                <div className="dot" />
+              </div>
+            </div>
+            <div className="instagram-header">
+              <h3 className="app-title">BOTSPACEHQ</h3>
+            </div>
+            <div className="content-area">
+              {renderContent()}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 // Instagram preview section
 const InstagramPreview = () => (
@@ -549,6 +848,7 @@ const App = () => (
       <Sidebar />
       <WorkflowBuilder />
       <InstagramPreview />
+      <LinkModal />
     </div>
   </WorkflowProvider>
 );
