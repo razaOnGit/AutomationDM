@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    
 }
 
 body {
@@ -340,7 +341,7 @@ body {
     display: flex;
     justify-content: flex-end; /* Align buttons to the right */
     gap: 1rem; /* 16px */
-    margin-top: auto; /* Pushes buttons to the bottom */
+    margin-top: 120px; /* Pushes buttons to the bottom */
     padding-top: 1.5rem; /* 24px */
     border-top: 1px solid #e5e7eb; /* Separator line */
 }
@@ -596,11 +597,15 @@ body {
 .app-title {
     font-weight: bold;
     font-size: 1.125rem; /* 18px */
+    color: grey;
 }
 
 .content-area {
     height: 384px;
     overflow-y: auto;
+    background-color: black;
+    position: relative;
+    padding-bottom: 60px; /* Add padding to avoid bottom nav overlap */
 }
 
 /* Instagram Post */
@@ -615,7 +620,8 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem; /* 12px */
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid #000000;
+    background-color: black;
 }
 
 .user-info {
@@ -1085,7 +1091,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  margin-left: auto;
+  margin-left: 60px;
 }
 
 .post-image-container {
@@ -1204,7 +1210,7 @@ body {
 .link-button-message {
   display: flex;
   justify-content: center;
-  margin: 12px 0;
+  margin: 15px 0px 15px 137px;
 }
 
 .send-link-btn {
@@ -1227,8 +1233,9 @@ body {
   align-items: center;
   background: #333;
   border-radius: 20px;
-  padding: 8px 16px;
+  padding: 16px 8px;
   gap: 12px;
+  margin-top: 242px;
 }
 
 .message-input {
@@ -2051,6 +2058,7 @@ tagram Comments Dialog - Exact Match to Image */
 
 .comment-input-bottom {
   padding: 12px 16px;
+  padding-bottom: 60px; /* Add extra padding to avoid bottom nav */
   border-top: 1px solid #333;
   background: #000;
 }
@@ -2190,7 +2198,6 @@ iPhone-style Phone Mockup */
   transform: translateX(-50%);
   width: 134px;
   height: 5px;
-  /* background: rgba(255, 255, 255, 0.3); */
   border-radius: 3px;
   z-index: 10;
 }
@@ -2271,7 +2278,7 @@ iPhone-style Phone Mockup */
 .content-area {
   flex: 1;
   overflow-y: auto;
-  background: white;
+  background: rgb(0, 0, 0);
 }
 
 /* Responsive adjustments for iPhone mockup */
@@ -2299,16 +2306,17 @@ iPhone-style Phone Mockup */
     radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), transparent 50%);
 }
 
-/* Power button */
+/*Power button */
+ 
 .phone-frame::after {
-  /* Redefine to add power button */
+  
   content: '';
   position: absolute;
   right: -4px;
   top: 120px;
   width: 4px;
   height: 60px;
-  background: linear-gradient(90deg, #333, #555);
+  /* background: linear-gradient(90deg, #333, #555); */
   border-radius: 2px;
 }
 
@@ -2352,4 +2360,441 @@ iPhone-style Phone Mockup */
   background: rgba(0, 0, 0, 0.3);
   border-radius: 3px;
   z-index: 10;
+}
+/* Post bottom section styling */
+.post-bottom-section {
+  padding: 12px 16px;
+  background: #000;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.left-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.action-icon {
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.action-icon:hover {
+  opacity: 0.7;
+}
+
+.likes-count {
+  margin-bottom: 8px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.likes-count span {
+  color: white;
+}
+
+.post-caption {
+  margin-bottom: 8px;
+  color: white;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.caption-username {
+  font-weight: 600;
+  margin-right: 8px;
+  color: white;
+}
+
+.caption-text {
+  color: white;
+}
+
+.view-comments-link {
+  background: none;
+  border: none;
+  color: #8e8e8e;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  padding: 0;
+  text-align: left;
+}
+
+.view-comments-link:hover {
+  opacity: 0.7;
+}
+
+.post-timestamp {
+  color: #8e8e8e;
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.caption-username {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.view-comments-link {
+  background: none;
+  border: none;
+  color: #8e8e8e;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  padding: 0;
+  text-align: left;
+}
+
+.view-comments-link:hover {
+  opacity: 0.7;
+}
+
+.post-timestamp {
+  color: #8e8e8e;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+/* Instagram header with logo */
+.instagram-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #000;
+  border-bottom: 1px solid #262626;
+}
+
+.header-left {
+  width: 24px;
+}
+
+.botspace-logo {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.header-right {
+  width: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header-right svg {
+  color: white;
+  cursor: pointer;
+}
+
+.header-right svg:hover {
+  opacity: 0.7;
+}
+
+/* Bottom navigation */
+.instagram-bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 12px;
+  background: #000;
+  border-top: 1px solid #262626;
+}
+
+.nav-icon {
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.nav-icon:hover {
+  opacity: 0.7;
+}
+
+.nav-icon.active {
+  color: white;
+}
+
+/* Content area positioning for bottom nav */
+.content-area {
+  height: 384px;
+  overflow-y: auto;
+  position: relative;
+  background-color: black;
+}
+
+/* Instagram Comments Dialog Styling */
+.instagram-comments-dialog {
+  background: #000;
+  color: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.comments-dialog-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+}
+
+.back-arrow {
+  color: white;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-username {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.header-subtitle {
+  font-size: 12px;
+  color: #8e8e8e;
+  margin-top: 2px;
+}
+
+.header-spacer {
+  width: 20px;
+}
+
+.profile-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  gap: 12px;
+  border-bottom: 1px solid #333;
+}
+
+.profile-avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-avatar-small img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  flex: 1;
+}
+
+.profile-more {
+  color: #8e8e8e;
+  cursor: pointer;
+}
+
+.half-post-preview {
+  position: relative;
+  height: 120px;
+  overflow: hidden;
+}
+
+.half-post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.post-text-overlay {
+  position: absolute;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
+}
+
+.overlay-text {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.post-bottom-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.white-bar {
+  display: block;
+  height: 100%;
+  width: 30%;
+  background: white;
+  border-radius: 2px;
+}
+
+.comments-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #333;
+}
+
+.comments-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.send-icon {
+  color: #8e8e8e;
+  cursor: pointer;
+}
+
+.single-comment {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px 16px;
+  gap: 12px;
+}
+
+.comment-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.comment-avatar-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.comment-username {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #8e8e8e;
+}
+
+.comment-heart-icon {
+  color: #8e8e8e;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.comment-text {
+  font-size: 14px;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.reply-btn {
+  background: none;
+  border: none;
+  color: #8e8e8e;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.comments-spacer {
+  flex: 1;
+}
+
+.emoji-reactions-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 16px;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+
+.emoji-reaction {
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.emoji-reaction:hover {
+  transform: scale(1.2);
+}
+
+.comment-input-bottom {
+  padding: 12px 16px;
+  padding-bottom: 0px; /* Add extra padding to avoid bottom nav */
+  border-top: 1px solid #333;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.input-avatar-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8e8e8e;
+}
+
+.comment-input-text {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 14px;
+}
+
+.comment-input-text::placeholder {
+  color: #8e8e8e;
 }

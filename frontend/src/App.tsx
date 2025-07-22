@@ -14,7 +14,6 @@ import {
   PlusSquare,
   Settings,
   Plus,
-  Play,
   Info,
   ChevronLeft,
   Phone,
@@ -47,7 +46,7 @@ const mockPosts = [
     id: 1,
     imageUrl: '/image/a.png',
     username: 'botspacehq',
-    caption: 'Beautiful sunset at the beach! 🌅',
+    caption: 'Even superheroes need a sidekick. 🦸‍♂️ If Iron Man trusts Botspace, maybe its time for your business to discover its power. Join us! ✨',
     likes: 245,
     comments: [
       { id: 1, username: 'original_user', text: 'nice video' },
@@ -69,11 +68,16 @@ const mockPosts = [
     id: 3,
     imageUrl: '/image/c.png',
     username: 'botspacehq',
-    caption: 'Delicious pasta night 🍝',
+    caption: `
+     use AI to automate DMs that sell.
+     create content that actually converts.
+     How to get discovered by buyers — not just followers
+     You just need the right tools. Drop Dm. Use it. And watch your sales grow.
+    `,
     likes: 156,
     comments: [
-      { id: 1, username: 'chef_mike', text: 'looks delicious!' },
-      { id: 2, username: 'pasta_lover', text: 'recipe please?' },
+      { id: 1, username: 'digital_marketer', text: 'This is exactly what I needed!' },
+      { id: 2, username: 'entrepreneur_life', text: 'Which AI tools do you recommend?' },
     ],
   },
 ];
@@ -428,8 +432,8 @@ const WorkflowBuilder = () => {
                   className="suggestion-chip"
                   onClick={() => {
                     const currentKeywords = state.commentKeyword.trim();
-                    const newKeyword = currentKeywords 
-                      ? `${currentKeywords}, ${word}` 
+                    const newKeyword = currentKeywords
+                      ? `${currentKeywords}, ${word}`
                       : word;
                     dispatch({ type: 'SET_COMMENT_KEYWORD', payload: newKeyword });
                   }}
@@ -644,7 +648,7 @@ const InstagramCommentsView = () => {
       <div className="half-post-preview">
         <img src={state.selectedPost.imageUrl} alt="Post preview" className="half-post-image" />
         <div className="post-text-overlay">
-          <span className="overlay-text">3 Billion Users!</span>
+          {/* <span className="overlay-text">3 Billion Users!</span> */}
         </div>
         <div className="post-bottom-bar">
           <span className="white-bar"></span>
@@ -695,13 +699,13 @@ const InstagramCommentsView = () => {
           <div className="input-avatar-circle">
             <Camera size={16} />
           </div>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Add a comment for username..."
             className="comment-input-text"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddComment()}
           />
         </div>
       </div>
@@ -709,8 +713,19 @@ const InstagramCommentsView = () => {
   );
 };
 
-// Enhanced Instagram post content with realistic comments view
-const InstagramPostContent = ({ showComments = false }: { showComments?: boolean }) => {
+// Instagram Bottom Navigation Component
+const InstagramBottomNav = () => (
+  <div className="instagram-bottom-nav">
+    <Home size={24} className="nav-icon active" />
+    <Search size={24} className="nav-icon" />
+    <PlusSquare size={24} className="nav-icon" />
+    <User size={24} className="nav-icon" />
+    <MessageCircle size={24} className="nav-icon" />
+  </div>
+);
+
+// Enhanced Instagram post content with restructured bottom section
+const InstagramPostContent = () => {
   const { state } = useWorkflow();
 
   return (
@@ -732,75 +747,72 @@ const InstagramPostContent = ({ showComments = false }: { showComments?: boolean
         <img src={state.selectedPost.imageUrl} alt="Post" />
       </div>
 
-      {/* Enhanced comments section */}
-      <div className="comments-section">
+      {/* MAIN UPDATE: Restructured bottom section */}
+      <div className="post-bottom-section">
+        {/* Action buttons row */}
         <div className="post-actions">
-          <Heart size={20} />
-          <MessageCircle size={20} />
-          <Send size={20} />
-          <Bookmark size={20} className="bookmark-right" />
+          <div className="left-actions">
+            <Heart size={24} className="action-icon" />
+            <MessageCircle size={24} className="action-icon" />
+            <Send size={24} className="action-icon" />
+          </div>
+          <Bookmark size={24} className="action-icon bookmark-right" />
         </div>
 
-        <div className="likes-section">
+        {/* Likes count */}
+        <div className="likes-count">
           <span>{state.selectedPost.likes} likes</span>
         </div>
 
-        <div className="caption-section">
-          <span className="username-bold">botspacehq</span>
+        {/* Caption with username */}
+        <div className="post-caption">
+          <span className="caption-username">botspacehq</span>
           <span className="caption-text">{state.selectedPost.caption}</span>
         </div>
 
-        {/* Real comments with avatars */}
-        <div className="comments-list">
-          {mockComments.map(comment => (
-            <div className="comment-row" key={comment.id}>
-              <div className="comment-avatar">
-                <img src={comment.avatar || '/default-avatar.png'} alt={comment.username} />
-              </div>
-              <div className="comment-content">
-                <span className="comment-username">{comment.username}</span>
-                <span className="comment-time">Now</span>
-                <div className="comment-text">
-                  {comment.text}
-                  {comment.isKeyword && <span className="trigger-badge">TRIGGER</span>}
-                </div>
-                <button className="reply-btn">Reply</button>
-              </div>
-              <Heart size={12} className="comment-like" />
-            </div>
-          ))}
-        </div>
+        {/* View all comments link */}
+        <button className="view-comments-link">
+          View all comments
+        </button>
 
-        {/* Add comment input */}
-        <div className="add-comment-section">
-          <input
-            type="text"
-            placeholder="Add a comment for username..."
-            className="comment-input"
-          />
-          <div className="emoji-reactions">
-            ❤️ 🙌 🔥 👏 😢 😍 😮 😂
-          </div>
+        {/* Time stamp */}
+        <div className="post-timestamp">
+          <span>6 May, 2025</span>
         </div>
       </div>
     </div>
   );
 };
 
-// Enhanced PhoneMockup with dynamic content switching
+// Enhanced PhoneMockup with dynamic content switching and bottom nav
 const PhoneMockup = () => {
   const { state } = useWorkflow();
 
   const renderContent = () => {
     switch (state.activeWorkflowStep) {
       case 'Post':
-        return <InstagramPostContent />;
+        return (
+          <>
+            <InstagramPostContent />
+            <InstagramBottomNav />
+          </>
+        );
       case 'Comments':
-        return <InstagramCommentsView />;
+        return (
+          <>
+            <InstagramCommentsView />
+            <InstagramBottomNav />
+          </>
+        );
       case 'DM':
         return <DMPreview />;
       default:
-        return <InstagramPostContent />;
+        return (
+          <>
+            <InstagramPostContent />
+            <InstagramBottomNav />
+          </>
+        );
     }
   };
 
@@ -817,7 +829,13 @@ const PhoneMockup = () => {
               </div>
             </div>
             <div className="instagram-header">
+              <div className="header-left">
+                <img src="/image/logo.jpeg" alt="BotSpace" className="botspace-logo" />
+              </div>
               <h3 className="app-title">BOTSPACEHQ</h3>
+              <div className="header-right">
+                <MessageSquareText size={24} />
+              </div>
             </div>
             <div className="content-area">
               {renderContent()}
