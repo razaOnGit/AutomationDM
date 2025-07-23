@@ -35,7 +35,7 @@ interface Comment {
 const mockPosts = [
   {
     id: 1,
-    imageUrl: '/image/a.png',
+    imageUrl: `${process.env.PUBLIC_URL}/image/a.png`,
     username: 'botspacehq',
     caption: 'Even superheroes need a sidekick. 🦸‍♂️ If Iron Man trusts Botspace, maybe its time for your business to discover its power. Join us! ✨',
     likes: 245,
@@ -46,7 +46,7 @@ const mockPosts = [
   },
   {
     id: 2,
-    imageUrl: '/image/b.png',
+    imageUrl: `${process.env.PUBLIC_URL}/image/b.png`,
     username: 'botspacehq',
     caption: '🎮 When your mom turns into your marketing manager 😩But she\'s right BotSpace is kinda genius. 🧠#BotSpace #MomKnowsBest #ContentCreatorLife',
     likes: 189,
@@ -57,7 +57,7 @@ const mockPosts = [
   },
   {
     id: 3,
-    imageUrl: '/image/c.png',
+    imageUrl: `${process.env.PUBLIC_URL}/image/c.png`,
     username: 'botspacehq',
     caption: `
      use AI to automate DMs that sell.
