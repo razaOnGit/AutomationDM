@@ -27,16 +27,16 @@ class WebSocketService {
           resolve();
         });
 
-        this.socket.on('connected', (data) => {
+        this.socket.on('connected', (data: any) => {
           console.log('🎉 WebSocket authenticated:', data);
         });
 
-        this.socket.on('connect_error', (error) => {
+        this.socket.on('connect_error', (error: any) => {
           console.error('❌ WebSocket connection error:', error);
           reject(error);
         });
 
-        this.socket.on('disconnect', (reason) => {
+        this.socket.on('disconnect', (reason: any) => {
           console.log('🔌 WebSocket disconnected:', reason);
           if (reason === 'io server disconnect') {
             // Server disconnected, try to reconnect
@@ -44,12 +44,12 @@ class WebSocketService {
           }
         });
 
-        this.socket.on('error', (error) => {
+        this.socket.on('error', (error: any) => {
           console.error('❌ WebSocket error:', error);
         });
 
         // Handle authentication errors
-        this.socket.on('auth_error', (error) => {
+        this.socket.on('auth_error', (error: any) => {
           console.error('🔐 WebSocket auth error:', error);
           this.disconnect();
           reject(new Error('Authentication failed'));

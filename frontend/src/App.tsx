@@ -31,15 +31,6 @@ interface Comment {
   isKeyword?: boolean;
 }
 
-// Mock comments data with avatars
-const mockComments: Comment[] = [
-  { id: 1, username: 'sarah_designs', text: 'This is amazing! 😍', avatar: '/image/avatar1.jpg' },
-  { id: 2, username: 'mike_photo', text: 'Great work!', avatar: '/image/avatar2.jpg' },
-  { id: 3, username: 'jenny_art', text: 'Love this content', avatar: '/image/avatar3.jpg' },
-  { id: 4, username: 'alex_creative', text: 'So inspiring! 🔥', avatar: '/image/avatar4.jpg' },
-  { id: 5, username: 'lisa_studio', text: 'Can you share the link?', avatar: '/image/avatar5.jpg', isKeyword: true },
-];
-
 // Mock data for posts
 const mockPosts = [
   {

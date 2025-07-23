@@ -70,7 +70,17 @@ export const workflowService = {
     };
   }): Promise<Workflow> => {
     try {
-      const response = await workflowAPI.create(workflowData);
+      // Ensure settings have default values
+      const workflowPayload = {
+        ...workflowData,
+        settings: {
+          caseSensitive: workflowData.settings?.caseSensitive ?? false,
+          exactMatch: workflowData.settings?.exactMatch ?? false,
+          maxDmsPerDay: workflowData.settings?.maxDmsPerDay ?? 50,
+        }
+      };
+      
+      const response = await workflowAPI.create(workflowPayload);
       return response.workflow;
     } catch (error) {
       console.error('Error creating workflow:', error);
