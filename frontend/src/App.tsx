@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import './App.css'; // Import the external CSS file
 
+// Images will be served from public folder
+
 import {
   Heart,
   MessageCircle,
@@ -35,7 +37,7 @@ interface Comment {
 const mockPosts = [
   {
     id: 1,
-    imageUrl: `${process.env.PUBLIC_URL}/image/a.png`,
+    imageUrl: '/image/a.png',
     username: 'botspacehq',
     caption: 'Even superheroes need a sidekick. 🦸‍♂️ If Iron Man trusts Botspace, maybe its time for your business to discover its power. Join us! ✨',
     likes: 245,
@@ -46,7 +48,7 @@ const mockPosts = [
   },
   {
     id: 2,
-    imageUrl: `${process.env.PUBLIC_URL}/image/b.png`,
+    imageUrl: '/image/b.png',
     username: 'botspacehq',
     caption: '🎮 When your mom turns into your marketing manager 😩But she\'s right BotSpace is kinda genius. 🧠#BotSpace #MomKnowsBest #ContentCreatorLife',
     likes: 189,
@@ -57,7 +59,7 @@ const mockPosts = [
   },
   {
     id: 3,
-    imageUrl: `${process.env.PUBLIC_URL}/image/c.png`,
+    imageUrl: '/image/c.png',
     username: 'botspacehq',
     caption: `
      use AI to automate DMs that sell.
