@@ -6,7 +6,7 @@ import {
   MessageCircle,
   Send,
   Bookmark,
-  MessageSquareText,
+  MessageSquare,
   MoreHorizontal,
   Search,
   Home,
@@ -206,7 +206,7 @@ const useWorkflow = () => {
 
 // Sidebar component
 const Sidebar = () => {
-  const icons = [Home, Search, PlusSquare, User, MessageSquareText, Send, Settings]; // Keep your existing icons
+  const icons = [Home, Search, PlusSquare, User, MessageSquare, Send, Settings]; // Keep your existing icons
 
   return (
     <div className="sidebar">
@@ -223,7 +223,7 @@ const Sidebar = () => {
 
       {icons.map((Icon, i) => (
         <div className={`sidebar-icon ${i === 2 ? 'active' : ''}`} key={i}>
-          {Icon === MessageSquareText ? (
+          {Icon === MessageSquare ? (
             <div className="sidebar-message-icon-wrapper">
               <Icon size={20} />
               <div className="sidebar-notification-dot"></div>
@@ -850,7 +850,7 @@ const PhoneMockup = () => {
               </div>
               <h3 className="app-title">BOTSPACEHQ</h3>
               <div className="header-right">
-                <MessageSquareText size={24} />
+                <MessageSquare size={24} />
               </div>
             </div>
             <div className="content-area">
