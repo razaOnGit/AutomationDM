@@ -1097,7 +1097,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   align-self: flex-start;
-  margin-top: auto;
+  margin-top: 70px;
   /* Pushes button to bottom */
 }
 

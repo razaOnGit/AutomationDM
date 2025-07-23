@@ -91,6 +91,7 @@ interface WorkflowState {
   showPostModal: boolean;
   dmMessage: string;
   dmLink: string;
+  dmWithLinkMessage: string;
   openingDmEnabled: boolean;
   linkUrl: string;
   showLinkModal: boolean;
@@ -110,6 +111,7 @@ type WorkflowAction =
   | { type: 'SET_SHOW_POST_MODAL'; payload: boolean }
   | { type: 'SET_DM_MESSAGE'; payload: string }
   | { type: 'SET_DM_LINK'; payload: string }
+  | { type: 'SET_DM_WITH_LINK_MESSAGE'; payload: string }
   | { type: 'SET_OPENING_DM_ENABLED'; payload: boolean }
   | { type: 'SET_LINK_URL'; payload: string }
   | { type: 'SET_SHOW_LINK_MODAL'; payload: boolean }
@@ -142,6 +144,8 @@ const workflowReducer = (state: WorkflowState, action: WorkflowAction): Workflow
       return { ...state, dmMessage: action.payload };
     case 'SET_DM_LINK':
       return { ...state, dmLink: action.payload };
+    case 'SET_DM_WITH_LINK_MESSAGE':
+      return { ...state, dmWithLinkMessage: action.payload };
     case 'SET_OPENING_DM_ENABLED':
       return { ...state, openingDmEnabled: action.payload };
     case 'SET_LINK_URL':
@@ -173,6 +177,7 @@ const WorkflowProvider = ({ children }: { children: React.ReactNode }) => {
     showPostModal: false,
     dmMessage: 'Hey there! I\'m so happy you\'re here, thanks so much for your interest 😊\n\nClick below and I\'ll send you the link in just a sec ✨',
     dmLink: '',
+    dmWithLinkMessage: '',
     openingDmEnabled: true, // Opening DM is enabled by default
     linkUrl: '',
     showLinkModal: false,
@@ -306,10 +311,11 @@ const DMConfiguration = () => {
       <div className="dm-option">
         <span>a DM with the link</span>
         <textarea
-          className="dm-textarea disabled" // This textarea is always disabled as per image
+          className="dm-textarea"
+          value={state.dmWithLinkMessage}
+          onChange={(e) => dispatch({ type: 'SET_DM_WITH_LINK_MESSAGE', payload: e.target.value })}
           placeholder="Write a message"
           rows={3}
-          disabled
         />
         <p className="helper-text">Create the DM you'd like to send</p>
         <button
@@ -536,9 +542,12 @@ const DMPreview = () => {
 
       {/* Message History */}
       <div className="messages-container">
-        <div className="message-bubble received">
-          <p>{state.dmMessage}</p>
-        </div>
+        {/* Opening DM message */}
+        {state.openingDmEnabled && state.dmMessage && (
+          <div className="message-bubble received">
+            <p>{state.dmMessage}</p>
+          </div>
+        )}
 
         <div className="message-bubble received">
           <p>Click below and I'll send you the link in just a sec ✨</p>
@@ -547,6 +556,13 @@ const DMPreview = () => {
         <div className="link-button-message">
           <button className="send-link-btn">Send me the link</button>
         </div>
+
+        {/* DM with link message - appears from bot side when user types */}
+        {state.dmWithLinkMessage && (
+          <div className="message-bubble received">
+            <p>{state.dmWithLinkMessage}</p>
+          </div>
+        )}
       </div>
 
       {/* Message Input */}
@@ -555,7 +571,7 @@ const DMPreview = () => {
           <Camera size={20} />
           <input
             type="text"
-            placeholder="Message..."
+            placeholder="Write a message"
             className="message-input"
           />
           <Smile size={20} />
