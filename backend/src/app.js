@@ -7,7 +7,12 @@ const commentMonitor = require('./services/commentMonitor');
 const app = express();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Simple logging middleware
@@ -50,7 +55,7 @@ async function startServer() {
   await commentMonitor.startAllActive();
   
   const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📡 API endpoints:`);
     console.log(`   POST /api/go-live - Start comment monitoring`);
