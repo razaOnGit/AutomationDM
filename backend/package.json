@@ -1,16 +1,15 @@
 {
-  "name": "backend",
+  "name": "instagram-comment-dm-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Instagram Comment-to-DM Automation Backend - Monitors comments and sends automated DMs",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "demo": "node demo-server.js",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "node test-simple-automation.js",
+    "test:flow": "node test-comment-to-dm-flow.js"
   },
-  "keywords": [],
+  "keywords": ["instagram", "automation", "comment", "dm", "social-media", "api"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

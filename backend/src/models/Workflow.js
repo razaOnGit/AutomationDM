@@ -1,122 +1,56 @@
 const mongoose = require('mongoose');
 
+// Simple workflow model that matches frontend needs
 const workflowSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-    index: true
-  },
-  instagramAccountId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'InstagramAccount',
-    required: true
-  },
+  // Basic workflow info
   name: {
     type: String,
     required: true,
-    trim: true,
-    maxlength: 100
+    default: function() {
+      return `Workflow ${Date.now()}`;
+    }
   },
   postId: {
     type: String,
-    required: true,
-    index: true
-  },
-  postData: {
-    mediaUrl: String,
-    caption: String,
-    mediaType: {
-      type: String,
-      enum: ['IMAGE', 'VIDEO', 'CAROUSEL_ALBUM']
-    },
-    permalink: String
+    required: true
   },
   keywords: [{
     type: String,
     required: true,
-    trim: true,
-    maxlength: 50
+    trim: true
   }],
   dmMessage: {
     type: String,
-    required: true,
-    maxlength: 1000
+    required: true
+  },
+  dmWithLinkMessage: {
+    type: String,
+    default: ''
   },
   linkUrl: {
     type: String,
-    validate: {
-      validator: function(v) {
-        if (!v) return true; // Optional field
-        return /^https?:\/\/.+/.test(v);
-      },
-      message: 'Link URL must be a valid HTTP/HTTPS URL'
-    }
+    default: ''
+  },
+  openingDmEnabled: {
+    type: Boolean,
+    default: true
   },
   status: {
     type: String,
-    enum: ['draft', 'active', 'paused', 'stopped'],
-    default: 'draft',
-    index: true
+    enum: ['draft', 'active', 'stopped'],
+    default: 'draft'
   },
-  statistics: {
-    totalTriggers: {
-      type: Number,
-      default: 0,
-      min: 0
-    },
-    dmsSent: {
-      type: Number,
-      default: 0,
-      min: 0
-    },
-    dmsDelivered: {
-      type: Number,
-      default: 0,
-      min: 0
-    },
-    lastTriggered: Date
-  },
-  settings: {
-    caseSensitive: {
-      type: Boolean,
-      default: false
-    },
-    exactMatch: {
-      type: Boolean,
-      default: false
-    },
-    maxDmsPerDay: {
-      type: Number,
-      default: 100,
-      min: 1,
-      max: 1000
-    }
+  // Simple statistics
+  stats: {
+    commentsDetected: { type: Number, default: 0 },
+    dmsSent: { type: Number, default: 0 },
+    lastActivity: Date
   }
 }, {
   timestamps: true
 });
 
-// Compound indexes for performance
-workflowSchema.index({ userId: 1, status: 1 });
-workflowSchema.index({ postId: 1, status: 1 });
-
-// Validation
-workflowSchema.pre('save', function(next) {
-  // Ensure keywords array is not empty
-  if (!this.keywords || this.keywords.length === 0) {
-    return next(new Error('At least one keyword is required'));
-  }
-  
-  // Validate DM message
-  if (!this.dmMessage || this.dmMessage.trim().length === 0) {
-    return next(new Error('DM message is required'));
-  }
-  
-  next();
-});
-
-// Instance methods
+// Simple methods
 workflowSchema.methods.activate = function() {
   this.status = 'active';
   return this.save();
@@ -127,47 +61,19 @@ workflowSchema.methods.stop = function() {
   return this.save();
 };
 
-workflowSchema.methods.pause = function() {
-  this.status = 'paused';
+workflowSchema.methods.incrementStats = function(type) {
+  if (type === 'comment') {
+    this.stats.commentsDetected += 1;
+  } else if (type === 'dm') {
+    this.stats.dmsSent += 1;
+  }
+  this.stats.lastActivity = new Date();
   return this.save();
 };
 
-workflowSchema.methods.incrementTriggers = function() {
-  this.statistics.totalTriggers += 1;
-  this.statistics.lastTriggered = new Date();
-  return this.save();
-};
-
-workflowSchema.methods.incrementDmsSent = function() {
-  this.statistics.dmsSent += 1;
-  return this.save();
-};
-
-workflowSchema.methods.incrementDmsDelivered = function() {
-  this.statistics.dmsDelivered += 1;
-  return this.save();
-};
-
-workflowSchema.methods.isActive = function() {
-  return this.status === 'active';
-};
-
-workflowSchema.methods.canSendMoreDms = function() {
-  // Check daily limit (simplified - would need more complex logic for actual daily tracking)
-  return this.statistics.dmsSent < this.settings.maxDmsPerDay;
-};
-
-// Static methods
-workflowSchema.statics.findActiveWorkflows = function() {
-  return this.find({ status: 'active' }).populate('userId instagramAccountId');
-};
-
-workflowSchema.statics.findByUser = function(userId) {
-  return this.find({ userId }).populate('instagramAccountId');
-};
-
-workflowSchema.statics.findByPostId = function(postId) {
-  return this.find({ postId, status: 'active' });
+// Find active workflows
+workflowSchema.statics.findActive = function() {
+  return this.find({ status: 'active' });
 };
 
 module.exports = mongoose.model('Workflow', workflowSchema);

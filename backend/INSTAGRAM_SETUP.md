@@ -15,7 +15,7 @@ To use Instagram Comment-to-DM automation, you need to create a Facebook Develop
 2. Click "My Apps" → "Create App"
 3. Choose "Business" as app type
 4. Fill in app details:
-   - App Name: "Instagram Comment DM Bot"
+   - App Name: "Comment DM Automation Bot"
    - App Contact Email: your-email@example.com
    - Business Account: Select or create one
 
