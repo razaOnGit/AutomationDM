@@ -269,6 +269,51 @@ const PostSelectionModal = () => {
 const DMConfiguration = () => {
   const { state, dispatch } = useWorkflow();
 
+  // Handle Go Live button click - Connect to backend
+  const handleGoLive = async () => {
+    try {
+      // Prepare workflow data for backend
+      const workflowData = {
+        name: `Workflow for ${state.selectedPost.username}`,
+        postId: state.selectedPost.id.toString(),
+        keywords: state.commentKeyword.split(',').map(k => k.trim()),
+        dmMessage: state.dmMessage,
+        dmWithLinkMessage: state.dmWithLinkMessage,
+        linkUrl: state.linkUrl,
+        openingDmEnabled: state.openingDmEnabled
+      };
+
+      console.log('🚀 Sending Go Live request to backend:', workflowData);
+
+      // Call backend API
+      const response = await fetch('http://localhost:5000/api/go-live', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify(workflowData)
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Update frontend state
+        dispatch({ type: 'SET_IS_LIVE', payload: true });
+        dispatch({ type: 'SET_WORKFLOW_ID', payload: result.workflow._id });
+        
+        console.log('✅ Workflow is now LIVE!', result);
+        alert('🚀 Workflow is now LIVE! Monitoring comments for keywords...');
+      } else {
+        console.error('❌ Failed to go live:', result.error);
+        alert(`Failed to activate workflow: ${result.error}`);
+      }
+
+    } catch (error) {
+      console.error('❌ Error connecting to backend:', error);
+      alert('Failed to connect to backend. Make sure the server is running on port 5000.');
+    }
+  };
+
   return (
     <div className="dm-configuration-section">
       <h2 className="workflow-title">They will get</h2>
@@ -319,7 +364,13 @@ const DMConfiguration = () => {
           Add A Link
         </button>
       </div>
-      <button className="go-live-btn-main">Go Live</button>
+      <button 
+        className="go-live-btn-main"
+        onClick={handleGoLive}
+        disabled={state.isLive}
+      >
+        {state.isLive ? 'LIVE 🔴' : 'Go Live'}
+      </button>
     </div>
   );
 };
