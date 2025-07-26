@@ -1,35 +1,36 @@
 require('dotenv').config();
 const express = require('express');
 
-console.log('Testing minimal Express setup...');
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-try {
-  const app = express();
-  
-  app.get('/test', (req, res) => {
-    res.json({ message: 'Test route working' });
-  });
-  
-  console.log('✅ Basic Express setup working');
-  
-  // Test route mounting
-  const testRouter = express.Router();
-  testRouter.get('/hello', (req, res) => {
-    res.json({ message: 'Hello from router' });
-  });
-  
-  app.use('/api/test', testRouter);
-  console.log('✅ Router mounting working');
-  
-  // Test server start
-  const server = app.listen(5001, () => {
-    console.log('✅ Server started on port 5001');
-    server.close(() => {
-      console.log('✅ Server closed successfully');
-      console.log('🎉 Minimal test passed - Express is working');
-    });
-  });
-  
-} catch (error) {
-  console.error('❌ Minimal test failed:', error.message);
-}
+// Basic middleware
+app.use(express.json());
+
+// Simple test route
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', message: 'Server is running' });
+});
+
+// Test webhook route
+app.get('/api/webhooks/instagram', (req, res) => {
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  console.log('Webhook verification request:', { mode, token, challenge });
+
+  if (mode === 'subscribe' && token === process.env.WEBHOOK_VERIFY_TOKEN) {
+    console.log('Webhook verified successfully');
+    res.status(200).send(challenge);
+  } else {
+    console.log('Webhook verification failed');
+    res.sendStatus(403);
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Minimal server running on port ${PORT}`);
+  console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`Webhook: http://localhost:${PORT}/api/webhooks/instagram`);
+});
