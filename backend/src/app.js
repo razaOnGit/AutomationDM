@@ -8,9 +8,37 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    console.log('🔍 CORS Debug - Incoming origin:', origin);
+    console.log('🔍 CORS Debug - FRONTEND_URL env var:', process.env.FRONTEND_URL);
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const allowedOrigins = [
+      'https://automation-dm.vercel.app', // Hardcoded for immediate fix
+      'https://automation-dm.vercel.app/', // With trailing slash
+      process.env.FRONTEND_URL,
+      process.env.FRONTEND_URL?.replace(/\/$/, ''), // Remove trailing slash
+      process.env.FRONTEND_URL?.replace(/([^/])$/, '$1/'), // Add trailing slash
+      'http://localhost:3000'
+    ].filter(Boolean); // Remove undefined values
+    
+    console.log('🔍 CORS Debug - Allowed origins:', allowedOrigins);
+    
+    if (allowedOrigins.includes(origin)) {
+      console.log('✅ CORS allowed for origin:', origin);
+      callback(null, true);
+    } else {
+      console.log('❌ CORS blocked origin:', origin);
+      console.log('✅ Allowed origins:', allowedOrigins);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 app.use(cors(corsOptions));
 app.use(express.json());
