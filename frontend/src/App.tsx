@@ -286,7 +286,8 @@ const DMConfiguration = () => {
       console.log('🚀 Sending Go Live request to backend:', workflowData);
 
       // Call backend API
-      const response = await fetch('http://localhost:5000/api/go-live', {
+      const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${apiUrl}/api/go-live`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json' 
